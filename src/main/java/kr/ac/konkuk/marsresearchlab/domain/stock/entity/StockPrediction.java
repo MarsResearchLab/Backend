@@ -14,6 +14,10 @@ public class StockPrediction {
     @Column(name = "stock_prediction_id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
+
     @Column(name = "stock_prediction_date", nullable = false)
     private Date date;
 

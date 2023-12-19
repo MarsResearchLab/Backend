@@ -12,6 +12,10 @@ public class StockPrice {
     @Column(name = "stock_price_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
+
     @Column(name = "stock_price_date", nullable = false)
     private Date date;
 

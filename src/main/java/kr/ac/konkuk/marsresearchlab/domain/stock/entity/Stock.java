@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +28,12 @@ public class Stock extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @OneToMany(mappedBy = "stock")
+    private List<StockPrice> stockPrices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "stock")
+    private List<StockPrediction> stockPredictions = new ArrayList<>();
 
     @Builder
     public Stock(Long id, String code, String name, Status status) {
