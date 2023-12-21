@@ -7,8 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -22,6 +25,9 @@ public class Stock extends BaseTimeEntity {
 
     @Column(name = "stock_code", nullable = false, unique = true, length = 45)
     private String code;
+
+    @Column(name = "stock_isu_code")
+    private String isuCode;
 
     @Column(name = "stock_name", nullable = false)
     private String name;
@@ -49,5 +55,32 @@ public class Stock extends BaseTimeEntity {
                 .name(name)
                 .status(Status.ACTIVE)
                 .build();
+    }
+
+    public int getLatestClosingPrice() {
+        return this.stockPrices.stream()
+                .max(Comparator.comparing(StockPrice::getDate))
+                .map(StockPrice::getClose)
+                .orElse(0);
+    }
+
+    public List<StockPrice> getLast15DaysPrices() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(16);
+
+        return this.stockPrices.stream()
+                .filter(stockPrice -> !stockPrice.getDate().isBefore(startDate) && !stockPrice.getDate().isAfter(endDate))
+                .sorted(Comparator.comparing(StockPrice::getDate))
+                .collect(Collectors.toList());
+    }
+
+    public List<StockPrediction> getNext5DaysPredictions() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(6);
+
+        return this.stockPredictions.stream()
+                .filter(stockPrediction -> !stockPrediction.getDate().isBefore(startDate) && !stockPrediction.getDate().isAfter(endDate))
+                .sorted(Comparator.comparing(StockPrediction::getDate))
+                .collect(Collectors.toList());
     }
 }

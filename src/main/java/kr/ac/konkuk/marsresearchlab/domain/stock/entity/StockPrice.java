@@ -1,10 +1,15 @@
 package kr.ac.konkuk.marsresearchlab.domain.stock.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StockPrice {
 
     @Id
@@ -12,12 +17,12 @@ public class StockPrice {
     @Column(name = "stock_price_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
     @Column(name = "stock_price_date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "stock_price_open", nullable = false)
     private int open;
